@@ -191,6 +191,70 @@ public class WordNet
     }
 
     /**
+     * 添加顶点，同时检查此顶点是否悬孤，如果悬孤则自动补全
+     *
+     * @param line
+     * @param vertex
+     * @param wordNetAll 这是一个完全的词图
+     */
+    public void insert(int line, Vertex vertex, WordNet wordNetAll, boolean cover) {
+        if (!cover) {
+            insert(line, vertex, wordNetAll);
+            return;
+        }
+
+        int index = 0;
+        int over = -1;
+        for (Vertex oldVertex : vertexes[line]) {
+            // 保证唯一性
+            if (oldVertex.realWord.length() == vertex.realWord.length()) {
+                over = index;
+                break;
+            }
+            index++;
+        }
+        if (over > -1) {
+            vertexes[line].remove(over);
+            vertexes[line].add(over, vertex);
+            return;
+        }
+        vertexes[line].add(vertex);
+        ++size;
+        // 保证连接
+        for (int l = line - 1; l > 1; --l) {
+            if (get(l, 1) == null) {
+                Vertex first = wordNetAll.getFirst(l);
+                if (first == null) break;
+                vertexes[l].add(first);
+                ++size;
+                if (vertexes[l].size() > 1) break;
+            } else {
+                break;
+            }
+        }
+        // 首先保证这个词语可直达
+        int l = line + vertex.realWord.length();
+        if (get(l).size() == 0) {
+            List<Vertex> targetLine = wordNetAll.get(l);
+            if (targetLine == null || targetLine.size() == 0) return;
+            vertexes[l].addAll(targetLine);
+            size += targetLine.size();
+        }
+        // 直达之后一直往后
+        for (++l; l < vertexes.length; ++l) {
+            if (get(l).size() == 0) {
+                Vertex first = wordNetAll.getFirst(l);
+                if (first == null) break;
+                vertexes[l].add(first);
+                ++size;
+                if (vertexes[l].size() > 1) break;
+            } else {
+                break;
+            }
+        }
+    }
+
+    /**
      * 全自动添加顶点
      *
      * @param vertexList

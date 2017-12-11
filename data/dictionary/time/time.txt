@@ -1,0 +1,56 @@
+上旬 dtime 0-10 d
+中旬 dtime 10-20 d
+下旬 dtime 20-30 d
+半年 dtime 1-6 m
+上半年 dtime 1-6 m
+上年 rel -1y
+本年 rel +0y
+大前年 rel -2y
+后年 rel +2y
+明年 rel +1y
+去年 rel -1y
+当年 rel +0y
+上个月 rel -1m
+这个月 rel +0m
+次月 rel +1m
+当月 rel +0m
+下个月 rel +1m
+本月 rel +0m
+今日 rel +0d
+明日 rel +1d
+后日 rel +2d
+昨日 rel -1d
+前日 rel -1d
+大后日 rel +3d
+当日 rel +0d
+当前 rel +0d
+大后天 rel +3d
+大前天 rel -3d
+今天 rel +0d
+前一天 rel -1d
+后天 rel +2d
+明天 rel +1d
+今晨 timec +0d
+明晨 timec +1d
+后晨 timec +2d
+昨晨 timec -1d
+今早 timec +0d
+明早 timec +1d
+后早上 timec +2d
+今早上 timec +0d
+昨早上 timec -1d
+昨晚 timec -1d
+明晚 timec +1d
+后晚 timec +2d
+当晚 timec +0d
+前晚 timec -2d
+明夜 timec +1d
+昨夜 timec -1d
+今夜 timec +0d
+当夜 timec +0d
+上周 week -1week
+下周 week +1week
+本周 week +0week
+上个星期 week -1week
+这个星期 week +0week
+下个星期 week +1week

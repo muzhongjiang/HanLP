@@ -62,7 +62,8 @@ public class CoreDictionary
     private static boolean load(String path)
     {
         logger.info("核心词典开始加载:" + path);
-        if (loadDat(path)) return true;
+//禁止操作bin文件
+//        if (loadDat(path)) return true;
         TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, Attribute>();
         BufferedReader br = null;
         try
@@ -89,29 +90,30 @@ public class CoreDictionary
             br.close();
             trie.build(map);
             logger.info("核心词典加载成功:" + trie.size() + "个词条，下面将写入缓存……");
-            try
-            {
-                DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
-                Collection<CoreDictionary.Attribute> attributeList = map.values();
-                out.writeInt(attributeList.size());
-                for (CoreDictionary.Attribute attribute : attributeList)
-                {
-                    out.writeInt(attribute.totalFrequency);
-                    out.writeInt(attribute.nature.length);
-                    for (int i = 0; i < attribute.nature.length; ++i)
-                    {
-                        out.writeInt(attribute.nature[i].ordinal());
-                        out.writeInt(attribute.frequency[i]);
-                    }
-                }
-                trie.save(out);
-                out.close();
-            }
-            catch (Exception e)
-            {
-                logger.warning("保存失败" + e);
-                return false;
-            }
+//禁止操作bin文件
+//            try
+//            {
+//                DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(path + Predefine.BIN_EXT));
+//                Collection<CoreDictionary.Attribute> attributeList = map.values();
+//                out.writeInt(attributeList.size());
+//                for (CoreDictionary.Attribute attribute : attributeList)
+//                {
+//                    out.writeInt(attribute.totalFrequency);
+//                    out.writeInt(attribute.nature.length);
+//                    for (int i = 0; i < attribute.nature.length; ++i)
+//                    {
+//                        out.writeInt(attribute.nature[i].ordinal());
+//                        out.writeInt(attribute.frequency[i]);
+//                    }
+//                }
+//                trie.save(out);
+//                out.close();
+//            }
+//            catch (Exception e)
+//            {
+//                logger.warning("保存失败" + e);
+//                return false;
+//            }
         }
         catch (FileNotFoundException e)
         {

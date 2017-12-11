@@ -11,19 +11,24 @@
  */
 package com.hankcs.hanlp.dependency.nnparser;
 
-import com.hankcs.hanlp.corpus.io.*;
-import com.hankcs.hanlp.utility.Predefine;
-import com.hankcs.hanlp.utility.TextUtility;
+import static com.hankcs.hanlp.utility.Predefine.logger;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.ByteArrayStream;
+import com.hankcs.hanlp.corpus.io.ICacheAble;
+import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.dependency.nnparser.action.Action;
 import com.hankcs.hanlp.dependency.nnparser.action.ActionFactory;
 import com.hankcs.hanlp.dependency.nnparser.option.SpecialOption;
 import com.hankcs.hanlp.dependency.nnparser.util.math;
-
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.*;
-import static com.hankcs.hanlp.utility.Predefine.logger;
+import com.hankcs.hanlp.utility.Predefine;
+import com.hankcs.hanlp.utility.TextUtility;
 
 /**
  * @author hankcs

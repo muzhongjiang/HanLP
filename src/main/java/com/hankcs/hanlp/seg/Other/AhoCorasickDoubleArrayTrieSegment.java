@@ -109,14 +109,6 @@ public class AhoCorasickDoubleArrayTrieSegment extends DictionaryBasedSegment
         config.speechTagging = true;
     }
 
-    public AhoCorasickDoubleArrayTrieSegment(TreeMap<String, CoreDictionary.Attribute> dictionary)
-    {
-        this();
-        trie = new AhoCorasickDoubleArrayTrie<CoreDictionary.Attribute>();
-        trie.build(dictionary);
-        setTrie(trie);
-    }
-
     @Override
     public Segment enableCustomDictionary(boolean enable)
     {

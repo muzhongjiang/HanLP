@@ -12,6 +12,14 @@
 package com.hankcs.hanlp.dictionary;
 
 
+import static com.hankcs.hanlp.utility.Predefine.logger;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
@@ -23,11 +31,6 @@ import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.utility.LexiconUtility;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
-
-import java.io.*;
-import java.util.*;
-
-import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
  * 用户自定义词典
@@ -60,7 +63,8 @@ public class CustomDictionary
     private static boolean loadMainDictionary(String mainPath)
     {
         logger.info("自定义词典开始加载:" + mainPath);
-        if (loadDat(mainPath)) return true;
+//禁止操作bin文件
+//        if (loadDat(mainPath)) return true;
         dat = new DoubleArrayTrie<CoreDictionary.Attribute>();
         TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, CoreDictionary.Attribute>();
         LinkedHashSet<Nature> customNatureCollector = new LinkedHashSet<Nature>();
@@ -97,36 +101,37 @@ public class CustomDictionary
             }
             logger.info("正在构建DoubleArrayTrie……");
             dat.build(map);
+//禁止操作bin文件            
             // 缓存成dat文件，下次加载会快很多
-            logger.info("正在缓存词典为dat文件……");
-            // 缓存值文件
-            List<CoreDictionary.Attribute> attributeList = new LinkedList<CoreDictionary.Attribute>();
-            for (Map.Entry<String, CoreDictionary.Attribute> entry : map.entrySet())
-            {
-                attributeList.add(entry.getValue());
-            }
-            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(mainPath + Predefine.BIN_EXT));
-            // 缓存用户词性
-            IOUtil.writeCustomNature(out, customNatureCollector);
-            // 缓存正文
-            out.writeInt(attributeList.size());
-            for (CoreDictionary.Attribute attribute : attributeList)
-            {
-                attribute.save(out);
-            }
-            dat.save(out);
-            out.close();
+//            logger.info("正在缓存词典为dat文件……");
+//            // 缓存值文件
+//            List<CoreDictionary.Attribute> attributeList = new LinkedList<CoreDictionary.Attribute>();
+//            for (Map.Entry<String, CoreDictionary.Attribute> entry : map.entrySet())
+//            {
+//                attributeList.add(entry.getValue());
+//            }
+//            DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(mainPath + Predefine.BIN_EXT));
+//            // 缓存用户词性
+//            IOUtil.writeCustomNature(out, customNatureCollector);
+//            // 缓存正文
+//            out.writeInt(attributeList.size());
+//            for (CoreDictionary.Attribute attribute : attributeList)
+//            {
+//                attribute.save(out);
+//            }
+//            dat.save(out);
+//            out.close();
         }
-        catch (FileNotFoundException e)
-        {
-            logger.severe("自定义词典" + mainPath + "不存在！" + e);
-            return false;
-        }
-        catch (IOException e)
-        {
-            logger.severe("自定义词典" + mainPath + "读取错误！" + e);
-            return false;
-        }
+//        catch (FileNotFoundException e)
+//        {
+//            logger.severe("自定义词典" + mainPath + "不存在！" + e);
+//            return false;
+//        }
+//        catch (IOException e)
+//        {
+//            logger.severe("自定义词典" + mainPath + "读取错误！" + e);
+//            return false;
+//        }
         catch (Exception e)
         {
             logger.warning("自定义词典" + mainPath + "缓存失败！\n" + TextUtility.exceptionToString(e));
@@ -183,7 +188,8 @@ public class CustomDictionary
         }
         catch (Exception e)
         {
-            logger.severe("自定义词典" + path + "读取错误！" + e);
+            if (!path.startsWith("."))
+                logger.severe("自定义词典" + path + "读取错误！" + e);
             return false;
         }
 
@@ -267,7 +273,7 @@ public class CustomDictionary
         if (HanLP.Config.Normalization) word = CharTable.convert(word);
         CoreDictionary.Attribute att = natureWithFrequency == null ? new CoreDictionary.Attribute(Nature.nz, 1) : CoreDictionary.Attribute.create(natureWithFrequency);
         if (att == null) return false;
-        if (dat.set(word, att)) return true;
+        if (dat != null && dat.set(word, att)) return true;
         if (trie == null) trie = new BinTrie<CoreDictionary.Attribute>();
         trie.put(word, att);
         return true;
@@ -340,7 +346,7 @@ public class CustomDictionary
     public static CoreDictionary.Attribute get(String key)
     {
         if (HanLP.Config.Normalization) key = CharTable.convert(key);
-        CoreDictionary.Attribute attribute = dat.get(key);
+        CoreDictionary.Attribute attribute = dat == null ? null : dat.get(key);
         if (attribute != null) return attribute;
         if (trie == null) return null;
         return trie.get(key);
@@ -402,7 +408,7 @@ public class CustomDictionary
      */
     public static boolean contains(String key)
     {
-        if (dat.exactMatchSearch(key) >= 0) return true;
+        if (dat != null && dat.exactMatchSearch(key) >= 0) return true;
         return trie != null && trie.containsKey(key);
     }
 

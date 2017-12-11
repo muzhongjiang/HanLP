@@ -24,7 +24,7 @@ import com.hankcs.hanlp.seg.common.WordNet;
 
 import java.util.LinkedList;
 import java.util.List;
-
+import com.hankcs.hanlp.recognition.time.TimeRecognition;
 /**
  * Viterbi分词器<br>
  * 也是最短路分词，最短路求解采用Viterbi算法
@@ -52,7 +52,7 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
 
         if (config.useCustomDictionary)
         {
-            if (config.indexMode > 0)
+            if (config.indexMode)
                 combineByCustomDictionary(vertexList, wordNetAll);
             else combineByCustomDictionary(vertexList);
         }
@@ -73,6 +73,9 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
         {
             WordNet wordNetOptimum = new WordNet(sentence, vertexList);
             int preSize = wordNetOptimum.size();
+            if (config.timeRecognize) {
+              TimeRecognition.recogntion(vertexList, wordNetOptimum, wordNetAll);
+           }
             if (config.nameRecognize)
             {
                 PersonRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
@@ -89,6 +92,7 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
             {
                 PlaceRecognition.Recognition(vertexList, wordNetOptimum, wordNetAll);
             }
+            config.organizationRecognize = true;
             if (config.organizationRecognize)
             {
                 // 层叠隐马模型——生成输出作为下一级隐马输入
@@ -109,7 +113,7 @@ public class ViterbiSegment extends WordBasedGenerativeModelSegment
         }
 
         // 如果是索引模式则全切分
-        if (config.indexMode > 0)
+        if (config.indexMode)
         {
             return decorateResultForIndexMode(vertexList, wordNetAll);
         }

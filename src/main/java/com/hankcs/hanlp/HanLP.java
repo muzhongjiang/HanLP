@@ -13,6 +13,7 @@ package com.hankcs.hanlp;
 
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.io.IIOAdapter;
+import com.hankcs.hanlp.corpus.io.ResourceIOAdapter;
 import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
@@ -59,7 +60,7 @@ public class HanLP
         /**
          * 核心词典路径
          */
-        public static String CoreDictionaryPath = "data/dictionary/CoreNatureDictionary.txt";
+        public static String CoreDictionaryPath = "data/dictionary/CoreNatureDictionary.mini.txt";
         /**
          * 核心词典词性转移矩阵路径
          */
@@ -71,7 +72,7 @@ public class HanLP
         /**
          * 2元语法词典路径
          */
-        public static String BiGramDictionaryPath = "data/dictionary/CoreNatureDictionary.ngram.txt";
+        public static String BiGramDictionaryPath = "data/dictionary/CoreNatureDictionary.ngram.mini.txt";
 
         /**
          * 停用词词典路径
@@ -105,6 +106,19 @@ public class HanLP
          * 地名词典转移矩阵路径
          */
         public static String OrganizationDictionaryTrPath = "data/dictionary/organization/nt.tr.txt";
+        /**
+         * 时间词典路径
+         */
+        public static String TimeDictionaryPath = "data/dictionary/time/t.txt";
+
+        /**
+         * 时间词典转移路径
+         */
+        public static String TimeDictionaryTrPath = "data/dictionary/time/t.tr.txt";
+        /**
+         *  用于解析时间规则路径
+         */
+        public static String TimeRulerPath = "data/dictionary/time/ruler.txt";
         /**
          * 简繁转换词典根目录
          */
@@ -173,10 +187,10 @@ public class HanLP
          */
         public static boolean Normalization = false;
         /**
-         * IO适配器（默认null，表示从本地文件系统读取），实现com.hankcs.hanlp.corpus.io.IIOAdapter接口
+         * IO适配器（默认ResourceIOAdapter，表示从jar包中读取），实现com.hankcs.hanlp.corpus.io.IIOAdapter接口
          * 以在不同的平台（Hadoop、Redis等）上运行HanLP
          */
-        public static IIOAdapter IOAdapter;
+        public static IIOAdapter IOAdapter = new ResourceIOAdapter();
 
         static
         {
@@ -241,6 +255,7 @@ public class HanLP
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
                 ShowTermNature = "true".equals(p.getProperty("ShowTermNature", "true"));
                 Normalization = "true".equals(p.getProperty("Normalization", "false"));
+                IOAdapter = null; // 在有配置文件的情况下，无论有无IOAdapter配置项，都先将IOAdapter置为null
                 String ioAdapterClassName = p.getProperty("IOAdapter");
                 if (ioAdapterClassName != null)
                 {
@@ -284,13 +299,13 @@ public class HanLP
                     }
                 }
                 sbInfo.append("Web项目则请放到下列目录：\n" +
-                                  "Webapp/WEB-INF/lib\n" +
-                                  "Webapp/WEB-INF/classes\n" +
-                                  "Appserver/lib\n" +
-                                  "JRE/lib\n");
+                                      "Webapp/WEB-INF/lib\n" +
+                                      "Webapp/WEB-INF/classes\n" +
+                                      "Appserver/lib\n" +
+                                      "JRE/lib\n");
                 sbInfo.append("并且编辑root=PARENT/path/to/your/data\n");
-                sbInfo.append("现在HanLP将尝试从").append(System.getProperties().get("user.dir")).append("读取data……");
-                logger.severe("没有找到hanlp.properties，可能会导致找不到data\n" + sbInfo);
+                sbInfo.append("现在HanLP将尝试从jar包内部resource读取data……");
+                logger.info("hanlp.properties，进入portable模式。若需要自定义HanLP，请按下列提示操作：\n" + sbInfo);
             }
         }
 

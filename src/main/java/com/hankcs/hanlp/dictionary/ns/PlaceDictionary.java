@@ -64,7 +64,7 @@ public class PlaceDictionary
         transformMatrixDictionary.load(HanLP.Config.PlaceDictionaryTrPath);
         trie = new AhoCorasickDoubleArrayTrie<String>();
         TreeMap<String, String> patternMap = new TreeMap<String, String>();
-        patternMap.put("CH", "CH");
+        patternMap.put(" ", "CH");
         patternMap.put("CDH", "CDH");
         patternMap.put("CDEH", "CDEH");
         patternMap.put("GH", "GH");

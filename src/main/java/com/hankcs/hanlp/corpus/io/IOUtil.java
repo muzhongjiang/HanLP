@@ -302,6 +302,42 @@ public class IOUtil
         return off;
     }
 
+    /**
+     * 将资源中的一个资源读入byte数组
+     *
+     * @param path
+     * @return
+     * @throws IOException
+     */
+    public static byte[] readBytesFromResource(String path) throws IOException
+    {
+        InputStream is = IOUtil.class.getResourceAsStream("/" + path);
+        byte[] targetArray = new byte[is.available()];
+        int len;
+        int off = 0;
+        while ((len = is.read(targetArray, off, targetArray.length - off)) != -1 && off < targetArray.length)
+        {
+            off += len;
+        }
+        is.close();
+        return targetArray;
+    }
+
+    public static byte[] getBytes(InputStream is) throws IOException
+    {
+
+        int len;
+        int size = 1024;
+        byte[] buf;
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        buf = new byte[size];
+        while ((len = is.read(buf, 0, size)) != -1)
+            bos.write(buf, 0, len);
+        buf = bos.toByteArray();
+        return buf;
+    }
+
     public static LinkedList<String> readLineList(String path)
     {
         LinkedList<String> result = new LinkedList<String>();
@@ -412,15 +448,6 @@ public class IOUtil
         public LineIterator(BufferedReader bw)
         {
             this.bw = bw;
-            try
-            {
-                line = bw.readLine();
-            }
-            catch (IOException e)
-            {
-                logger.warning("在读取过程中发生错误" + TextUtility.exceptionToString(e));
-                bw = null;
-            }
         }
 
         public LineIterator(String path)
@@ -435,7 +462,7 @@ public class IOUtil
                 logger.warning("文件" + path + "不存在，接下来的调用会返回null\n" + TextUtility.exceptionToString(e));
                 bw = null;
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 logger.warning("在读取过程中发生错误" + TextUtility.exceptionToString(e));
                 bw = null;
@@ -517,6 +544,29 @@ public class IOUtil
         {
             throw new UnsupportedOperationException("只读，不可写！");
         }
+    }
+
+    /**
+     * 判断文件是否存在
+     *
+     * @param path
+     * @return
+     */
+    public static boolean isFileExisted(String path)
+    {
+        File file = new File(path);
+        return file.isFile() && file.exists();
+    }
+
+    /**
+     * 判断资源是否位于jar中
+     *
+     * @param path
+     * @return
+     */
+    public static boolean isResource(String path)
+    {
+        return path.startsWith("data/");   // 这样未必好，比如用户的root就叫/data/就会发生问题，不过目前就这么办了
     }
 
     /**
@@ -654,13 +704,19 @@ public class IOUtil
     }
 
     /**
-     * 本地文件是否存在
+     * class.getResourceAsStream的wrapper，在资源不存在的情况下抛出IOException，
      * @param path
      * @return
+     * @throws FileNotFoundException
      */
-    public static boolean isFileExisted(String path)
+    public static InputStream getResourceAsStream(String path) throws FileNotFoundException
     {
-        File file = new File(path);
-        return file.isFile() && file.exists();
+        InputStream is = IOUtil.class.getResourceAsStream(path);
+        if (is == null)
+        {
+            throw new FileNotFoundException("资源文件" + path + "不存在于jar中");
+        }
+
+        return is;
     }
 }

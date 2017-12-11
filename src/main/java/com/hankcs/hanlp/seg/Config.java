@@ -19,7 +19,7 @@ public class Config
     /**
      * 是否是索引分词（合理地最小分割）
      */
-    public int indexMode = 0;
+    public boolean indexMode = false;
     /**
      * 是否识别中国人名
      */
@@ -40,6 +40,10 @@ public class Config
      * 是否识别机构
      */
     public boolean organizationRecognize = false;
+    /**
+     * 是否识别时间
+     */
+    public boolean timeRecognize = true;
     /**
      * 是否加载用户词典
      */

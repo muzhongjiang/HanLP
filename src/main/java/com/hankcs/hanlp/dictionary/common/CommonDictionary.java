@@ -11,19 +11,20 @@
  */
 package com.hankcs.hanlp.dictionary.common;
 
-import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
-import com.hankcs.hanlp.corpus.io.ByteArray;
-import com.hankcs.hanlp.corpus.io.IOUtil;
-import com.hankcs.hanlp.utility.TextUtility;
-
+import static com.hankcs.hanlp.utility.Predefine.logger;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
-
-import static com.hankcs.hanlp.utility.Predefine.BIN_EXT;
-import static com.hankcs.hanlp.utility.Predefine.logger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import com.hankcs.hanlp.collection.trie.DoubleArrayTrie;
+import com.hankcs.hanlp.corpus.io.ByteArray;
+import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.utility.TextUtility;
 
 /**
  * 通用的词典，对应固定格式的词典，但是标签可以泛型化
@@ -52,10 +53,11 @@ public abstract class CommonDictionary<V>
     {
         trie = new DoubleArrayTrie<V>();
         long start = System.currentTimeMillis();
-        if (loadDat(ByteArray.createByteArray(path + BIN_EXT)))
-        {
-            return true;
-        }
+//禁止操作bin文件
+//        if (loadDat(ByteArray.createByteArray(path + BIN_EXT)))
+//        {
+//            return true;
+//        }
         TreeMap<String, V> map = new TreeMap<String, V>();
         try
         {
@@ -88,7 +90,8 @@ public abstract class CommonDictionary<V>
             return false;
         }
         logger.info(path + "加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
-        saveDat(path + BIN_EXT, valueList);
+//禁止操作bin文件
+//        saveDat(path + BIN_EXT, valueList);
         return true;
     }
 

@@ -21,8 +21,8 @@ hs_err_pid*
 /*.eml
 /.project
 # 以下是词典和模型的二进制文件，请不要提交到版本库
-*.dat
-*.bin
+#*.dat
+#*.bin
 *.yes
 # 我做实验用的目录
 /data/test

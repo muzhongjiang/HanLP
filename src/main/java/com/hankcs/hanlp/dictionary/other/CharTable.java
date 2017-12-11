@@ -33,6 +33,7 @@ public class CharTable
     static
     {
         long start = System.currentTimeMillis();
+        logger.info("字符正规化表开始加载" + HanLP.Config.CharTablePath);
         if (!load(HanLP.Config.CharTablePath))
         {
             logger.severe("字符正规化表加载失败");
@@ -44,7 +45,8 @@ public class CharTable
     private static boolean load(String path)
     {
         String binPath = path + Predefine.BIN_EXT;
-        if (loadBin(binPath)) return true;
+//禁止操作bin文件
+//        if (loadBin(binPath)) return true;
         CONVERT = new char[Character.MAX_VALUE + 1];
         for (int i = 0; i < CONVERT.length; i++)
         {
@@ -59,7 +61,8 @@ public class CharTable
             CONVERT[line.charAt(0)] = CONVERT[line.charAt(2)];
         }
         logger.info("正在缓存字符正规化表到" + binPath);
-        IOUtil.saveObjectTo(CONVERT, binPath);
+//禁止操作bin文件
+//        IOUtil.saveObjectTo(CONVERT, binPath);
 
         return true;
     }

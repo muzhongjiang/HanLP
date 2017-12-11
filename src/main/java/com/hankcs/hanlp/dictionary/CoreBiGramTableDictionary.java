@@ -58,8 +58,9 @@ public class CoreBiGramTableDictionary
 
     static boolean load(String path)
     {
-        String datPath = HanLP.Config.BiGramDictionaryPath + ".table" + Predefine.BIN_EXT;
-        if (loadDat(datPath)) return true;
+//禁止操作bin文件
+//        String datPath = HanLP.Config.BiGramDictionaryPath + ".table" + Predefine.BIN_EXT;
+//        if (loadDat(datPath)) return true;
         BufferedReader br;
         TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<Integer, TreeMap<Integer, Integer>>();
         try
@@ -131,11 +132,12 @@ public class CoreBiGramTableDictionary
             logger.severe("二元词典" + path + "读取错误！" + e);
             return false;
         }
-        logger.info("开始缓存二元词典到" + datPath);
-        if (!saveDat(datPath))
-        {
-            logger.warning("缓存二元词典到" + datPath + "失败");
-        }
+//禁止操作bin文件
+//        logger.info("开始缓存二元词典到" + datPath);
+//        if (!saveDat(datPath))
+//        {
+//            logger.warning("缓存二元词典到" + datPath + "失败");
+//        }
         return true;
     }
 
