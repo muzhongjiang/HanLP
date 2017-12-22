@@ -32,7 +32,7 @@ public enum NRPattern
     BXD,
     BZ,
 //    CD,
-    EE,
+//    EE,
     FE,
     FC,
     FB,

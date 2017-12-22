@@ -29,6 +29,7 @@ import java.util.List;
  */
 public class PersonRecognition
 {
+//    public static boolean
     public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
         List<EnumItem<NR>> roleTagList = roleObserve(pWordSegResult);
@@ -83,7 +84,7 @@ public class PersonRecognition
         {
             Vertex vertex = iterator.next();
             EnumItem<NR> nrEnumItem = PersonDictionary.dictionary.get(vertex.realWord);
-            if (nrEnumItem == null)
+            if (nrEnumItem == null || nrEnumItem.labelMap.size() == 0)
             {
                 switch (vertex.guessNature())
                 {
@@ -106,6 +107,7 @@ public class PersonRecognition
                         nrEnumItem = new EnumItem<NR>(NR.A, PersonDictionary.transformMatrixDictionary.getTotalFrequency(NR.A));
                     }break;
                 }
+
             }
             tagList.add(nrEnumItem);
         }

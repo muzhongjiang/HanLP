@@ -33,6 +33,7 @@ public class PlaceRecognition
 {
     public static boolean Recognition(List<Vertex> pWordSegResult, WordNet wordNetOptimum, WordNet wordNetAll)
     {
+        PlaceDictionary.checkPlace(pWordSegResult, wordNetOptimum, wordNetAll);
         List<EnumItem<NS>> roleTagList = roleTag(pWordSegResult, wordNetAll);
         if (HanLP.Config.DEBUG)
         {

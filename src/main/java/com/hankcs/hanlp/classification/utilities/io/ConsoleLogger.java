@@ -20,12 +20,12 @@ public class ConsoleLogger implements ILogger
     long start;
     public void out(String format, Object... args)
     {
-        System.out.printf(format, args);
+//        System.out.printf(format, args);
     }
 
     public void err(String format, Object... args)
     {
-        System.err.printf(format, args);
+//        System.err.printf(format, args);
     }
 
     public void start(String format, Object... args)

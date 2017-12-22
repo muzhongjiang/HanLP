@@ -11,7 +11,12 @@
  */
 package com.hankcs.hanlp.utility;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -142,9 +147,27 @@ public class Predefine
      * 日志组件
      */
     public static Logger logger = Logger.getLogger("HanLP");
+    /**
+     * 设置文件输出格式
+     */
+    public static final Formatter logFormatter = new Formatter() {
+      @Override
+      public String format(LogRecord record) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date=sdf.format(new Date());
+        return "[" +date + " - Level:"
+            + record.getLevel().getName().substring(0, 1) + " ]-" + "[" + record.getSourceClassName()
+            + " -> " + record.getSourceMethodName() + "()] " + record.getMessage() + "\n";
+      }
+    };
     static
     {
         logger.setLevel(Level.WARNING);
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        
+        consoleHandler.setLevel(Level.ALL);
+        consoleHandler.setFormatter(logFormatter);
+        logger.addHandler(consoleHandler);
     }
 
     /**

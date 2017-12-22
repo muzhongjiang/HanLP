@@ -5,6 +5,7 @@ import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
 import com.hankcs.hanlp.corpus.dictionary.item.EnumItem;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 import com.hankcs.hanlp.corpus.tag.NS;
+import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.corpus.tag.T;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.TransformMatrixDictionary;
@@ -83,7 +84,7 @@ public class TimeDictionary {
 
     public static void loadRuler() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(IOUtil.newInputStream(HanLP.Config.TimeRulerPath), "UTF-8"));
-        String line ;
+        String line;
         rulerList = new ArrayList<>();
         while ((line = br.readLine()) != null) {
             rulerList.add(Pattern.compile(line));
@@ -102,8 +103,10 @@ public class TimeDictionary {
                 int offset = 0;
                 while (matcher.find()) {
                     String time = matcher.group();
+//                    System.out.println("time ======== " + time);
                     int index = sentence.indexOf(time);
                     wordNetOptimum.insert(offset + index, new Vertex(Predefine.TAG_PLACE, time, ATTRIBUTE, WORD_ID), wordNetAll, true);
+//                    System.out.println("wordNetOptimum ======== " + wordNetOptimum);
                     offset = offset + index;
                     sentence = sentence.substring(index);
                 }
@@ -132,9 +135,9 @@ public class TimeDictionary {
                     wordBuilder.append(wordArray.get(i).getRealWord().toString());
                 }
                 String time = wordBuilder.toString();
-//                if (!isBaseCase(time)) {
-//                    return;
-//                }
+                if (!isBaseCase(begin, vertexList, time)) {
+                    return;
+                }
                 // 正式算它是一个时间
                 if (HanLP.Config.DEBUG) {
                     System.out.printf("识别出时间：%s %s\n", time, value);
@@ -150,14 +153,44 @@ public class TimeDictionary {
         });
     }
 
-    private static boolean isBaseCase(String time) {
-        EnumItem<T> nrEnumItem = tDictionary.get(time);
-        if (nrEnumItem == null) {
-            // 说明识别的是一个新词
-            return false;
+    private static boolean isBaseCase(int begin, List<Vertex> vertexList, String time) {
+        if (begin > 0) {
+            // 时间词前面不能是介词短语
+            Pattern dayPattern = Pattern.compile("^[0-9一二三四五六七八九十]+[日天号]$");
+            Matcher dayMatcher = dayPattern.matcher(time);
+            if (dayMatcher.find()) {
+                Vertex v = vertexList.get(begin - 1);
+                if (v != null && v.realWord != null && v.realWord.matches("的|地|得")) {
+                    return false;
+                }
+                if (v != null && (v.hasNature(Nature.u) || v.hasNature(Nature.ude1) || v.hasNature(Nature.ude2) || v.hasNature(Nature.ude3))) {
+                    return false;
+                }
+//                if (v.realWord.matches("的|地|得") || v.getNature().startsWith("u")) {
+//                    return false;
+//                }
+            }
         }
-        return nrEnumItem.containsLabel(T.Z);
+
+        Pattern pattern = Pattern.compile("([0-9零一二三四五六七八九十]+)年");
+        Matcher matcher = pattern.matcher(time);
+        if (matcher.find()) {
+            String m = matcher.group(1);
+            if (m.length() < 2) {
+                return false;
+            }
+        }
+        return true;
     }
+
+//    private static boolean isBaseCase(String time) {
+//        EnumItem<T> nrEnumItem = tDictionary.get(time);
+//        if (nrEnumItem == null) {
+//            // 说明识别的是一个新词
+//            return false;
+//        }
+//        return nrEnumItem.containsLabel(T.Z);
+//    }
 
     public static void main(String args[]) {
 //        tDictionary = new TDictionary();

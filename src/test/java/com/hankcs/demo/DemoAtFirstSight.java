@@ -11,7 +11,9 @@
  */
 package com.hankcs.demo;
 
+import java.util.logging.Handler;
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.classification.utilities.Predefine;
 
 /**
  * 第一个Demo，惊鸿一瞥

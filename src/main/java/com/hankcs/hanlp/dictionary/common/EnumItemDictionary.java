@@ -24,6 +24,7 @@ import java.util.Map;
  */
 public abstract class EnumItemDictionary<E extends Enum<E>> extends CommonDictionary<EnumItem<E>>
 {
+    public static int minValue = 5;
     @Override
     protected EnumItem<E> createValue(String[] params)
     {
@@ -31,7 +32,9 @@ public abstract class EnumItemDictionary<E extends Enum<E>> extends CommonDictio
         EnumItem<E> nrEnumItem = new EnumItem<E>();
         for (Map.Entry<String, Integer> e : args.getValue())
         {
-            nrEnumItem.labelMap.put(valueOf(e.getKey()), e.getValue());
+            if(e.getValue() > minValue){
+                nrEnumItem.labelMap.put(valueOf(e.getKey()), e.getValue());
+            }
         }
         return nrEnumItem;
     }

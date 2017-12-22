@@ -44,7 +44,7 @@ public abstract class Segment
     /**
      * 分词器配置
      */
-    protected Config config;
+    public Config config;
 
     /**
      * 构造一个分词器

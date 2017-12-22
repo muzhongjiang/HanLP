@@ -35,11 +35,11 @@ public class Config
     /**
      * 是否识别地名
      */
-    public boolean placeRecognize = false;
+    public boolean placeRecognize = true;
     /**
      * 是否识别机构
      */
-    public boolean organizationRecognize = false;
+    public boolean organizationRecognize = true;
     /**
      * 是否识别时间
      */
@@ -67,7 +67,7 @@ public class Config
     /**
      * 是否识别数字和量词
      */
-    public boolean numberQuantifierRecognize = false;
+    public boolean numberQuantifierRecognize = true;
     /**
      * 并行分词的线程数
      */

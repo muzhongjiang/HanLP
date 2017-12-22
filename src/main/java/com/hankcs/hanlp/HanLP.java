@@ -60,7 +60,7 @@ public class HanLP
         /**
          * 核心词典路径
          */
-        public static String CoreDictionaryPath = "data/dictionary/CoreNatureDictionary.mini.txt";
+        public static String CoreDictionaryPath = "data/dictionary/CoreNatureDictionary.txt";
         /**
          * 核心词典词性转移矩阵路径
          */
@@ -98,6 +98,14 @@ public class HanLP
          * 地名词典转移矩阵路径
          */
         public static String PlaceDictionaryTrPath = "data/dictionary/place/ns.tr.txt";
+        /**
+         * 清洗后地名编码库路径
+         */
+        public static String PlaceChinaPath = "data/dictionary/place/placename.txt";
+        /**
+         *标准编码地名库
+         */
+        public static String CodePlacePath = "data/dictionary/place/tjplace.txt";
         /**
          * 地名词典路径
          */
